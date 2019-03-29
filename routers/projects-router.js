@@ -13,15 +13,29 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-    const { id } = req.params;
+    const {
+        id
+    } = req.params;
     db('projects')
-        .join('actions', 'actions.project_id', '=', 'projects.id')
-        .where({'projects.id': id })
+        .where({
+            id
+        })
+        .first()
         .then(project => {
             if (!project) {
-                res.status(400).json({ message: 'Not record exists.'})
+                return res.status(400).json({
+                    message: 'No record exists.'
+                })
             }
-            res.status(200).json(project)
+            db('actions')
+                .where({
+                    project_id: project.id
+                })
+                .then(action => {
+                    project.actions = action
+                    res.status(200).json(project)
+                })
+
         })
         .catch(err => {
             res.status(500).json(err)
@@ -29,9 +43,14 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    const { project_name, project_description} = req.body;
-    if(!project_name || !project_description) {
-        return res.status(400).json({ errorMessage: 'Please provide a name and description for the project.' })
+    const {
+        project_name,
+        project_description
+    } = req.body;
+    if (!project_name || !project_description) {
+        return res.status(400).json({
+            errorMessage: 'Please provide a name and description for the project.'
+        })
     }
     db('projects')
         .insert({
@@ -42,7 +61,9 @@ router.post('/', (req, res) => {
             res.status(201).json(project)
         })
         .catch(err => {
-            res.status(500).json({ error: 'Project could not be saved to database.'})
+            res.status(500).json({
+                error: 'Project could not be saved to database.'
+            })
         });
 });
 module.exports = router;
