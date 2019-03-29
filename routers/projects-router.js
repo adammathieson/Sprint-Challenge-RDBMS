@@ -26,17 +26,17 @@ router.get('/:id', (req, res) => {
         .catch(err => {
             res.status(500).json(err)
         });
-}) ;
+});
 
 router.post('/', (req, res) => {
-    const { project_name, description} = req.body;
-    if(!name || !description) {
+    const { project_name, project_description} = req.body;
+    if(!project_name || !project_description) {
         return res.status(400).json({ errorMessage: 'Please provide a name and description for the project.' })
     }
-    db
+    db('projects')
         .insert({
             project_name,
-            description
+            project_description
         })
         .then(project => {
             res.status(201).json(project)

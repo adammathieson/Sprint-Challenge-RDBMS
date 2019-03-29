@@ -11,7 +11,7 @@ exports.up = function(knex, Promise) {
                 .text('project_description')
                 .notNullable()
             tbl
-                .boolean('completed')
+                .boolean('project_completed')
                 .defaultTo(false)
         })
         .createTable('actions', tbl => {
@@ -30,7 +30,7 @@ exports.up = function(knex, Promise) {
                 text('notes')
                 .notNullable();
             tbl
-                .boolean('completed')
+                .boolean('action_completed')
                 .defaultTo(false);
         })
 };

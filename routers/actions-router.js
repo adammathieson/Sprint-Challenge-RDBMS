@@ -17,10 +17,13 @@ router.post('/', (req, res) => {
     if(!project_id || !description) {
         return res.status(400).json({ errorMessage: 'Please provide a project ID and a description.' })
     }
-    const newPost = { project_id, description, notes}
-    
+
     db('actions')
-        .insert({ newPost })
+        .insert({ 
+            project_id, 
+            description, 
+            notes 
+        })
         .then(action => {
             res.status(201).json(action)
         })
