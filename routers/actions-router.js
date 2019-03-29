@@ -12,4 +12,21 @@ router.get('/', (req, res) => {
         });
 });
 
+router.post('/', (req, res) => {
+    const { project_id, description, notes } = req.body;
+    if(!project_id || !description) {
+        return res.status(400).json({ errorMessage: 'Please provide a project ID and a description.' })
+    }
+    const newPost = { project_id, description, notes}
+    
+    db('actions')
+        .insert({ newPost })
+        .then(action => {
+            res.status(201).json(action)
+        })
+        .catch(err => {
+            res.status(500).json({ error: 'The action could not be saved to database' })
+        });
+});
+
 module.exports = router;
